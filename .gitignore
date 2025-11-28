@@ -1,0 +1,131 @@
+####################################
+# Spring Boot / Gradle Project
+####################################
+
+# Build outputs
+/build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+# Gradle
+.gradle/
+*.gradle
+gradle-app.setting
+
+# Logs
+logs/
+*.log
+*.out
+*.tmp
+*.bak
+
+####################################
+# Application Config (Security)
+####################################
+
+# Sensitive config files
+application.yml
+application-*.yml
+application.properties
+application-*.properties
+
+# Allow example/template config files
+!application-example.yml
+!application-sample.yml
+
+# Environment variables
+.env
+*.env
+
+# SSL / Key / Credential files
+*.keystore
+*.p12
+*.pem
+*.crt
+*.key
+
+####################################
+# IDE / Tooling
+####################################
+
+# IntelliJ IDEA
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
+
+# STS / Eclipse
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+bin/
+!**/src/main/**/bin/
+!**/src/test/**/bin/
+
+# VSCode
+.vscode/
+
+# NetBeans
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+####################################
+# Databases / Cache / Temp
+####################################
+
+# H2 / Local DB files
+*.h2.db
+*.mv.db
+*.db
+
+# Cache
+.cache/
+tmp/
+*.tmp
+
+####################################
+# OS Specific
+####################################
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+####################################
+# Test Reports / Coverage
+####################################
+
+/test-output/
+*.coverage
+*.lcov
+reports/
+coverage/
+
+####################################
+# Custom
+####################################
+
+# Local test files
+src/test/resources/test-*
+src/test/resources/*.yml
+
+# Personal notes
+notes.txt
+TODO.md
