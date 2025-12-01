@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalExceptionHandler {
     @ExceptionHandler(GlobalException.class)
     public ResponseEntity<ResponseBody<Void>> handleException(GlobalException e) {
-        return ResponseEntity.status(e.getErrorcode().getStatus())
-                .body(ResponseBody.error(e.getErrorcode()));
+        return ResponseEntity.status(e.getErrorCode().getStatus())
+                .body(ResponseBody.error(e.getErrorCode()));
     }
 }
