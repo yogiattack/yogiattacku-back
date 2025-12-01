@@ -1,4 +1,4 @@
-package com.ssafy.yogiattacku.user;
+package com.ssafy.yogiattacku.user.entity;
 
 import com.ssafy.yogiattacku.global.common.TimeBaseEntity;
 import jakarta.persistence.*;
