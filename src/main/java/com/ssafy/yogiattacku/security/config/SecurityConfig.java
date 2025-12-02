@@ -1,9 +1,10 @@
 package com.ssafy.yogiattacku.security.config;
 
+import com.ssafy.yogiattacku.security.handler.CustomAccessDeniedHandler;
+import com.ssafy.yogiattacku.security.handler.CustomAuthenticationEntryPoint;
 import com.ssafy.yogiattacku.security.handler.CustomLoginSuccessHandler;
 import com.ssafy.yogiattacku.security.jwt.JwtAuthenticationFilter;
 import com.ssafy.yogiattacku.security.service.CustomOAuth2UserService;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,6 +29,8 @@ public class SecurityConfig {
     private final CustomOAuth2UserService customOAuth2UserService;
     private final CustomLoginSuccessHandler customLoginSuccessHandler;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+    private final CustomAccessDeniedHandler customAccessDeniedHandler;
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -38,19 +41,15 @@ public class SecurityConfig {
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .sessionManagement(SecurityConfig::customize)
                 .exceptionHandling(ex -> ex
-                        .authenticationEntryPoint((request, response, authException) -> {
-                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                        })
-                        .accessDeniedHandler((request, response, accessDeniedException) -> {
-                            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-                        })
+                        .authenticationEntryPoint(customAuthenticationEntryPoint)
+                        .accessDeniedHandler(customAccessDeniedHandler)
                 )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/oauth2/**",
                                 "/login/**",
-                                "/auth/refresh",
-                                "/auth/logout"
+                                "/auth/refresh"
                         ).permitAll()
+                        .requestMatchers("/auth/logout").authenticated()
                         .anyRequest().authenticated())
                 .oauth2Login(oauth2 -> oauth2
                         .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService))
@@ -66,7 +65,7 @@ public class SecurityConfig {
 
         config.setAllowedOrigins(List.of("http://localhost:3000"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
-        config.setAllowedHeaders(List.of("Authorization", "Content-Type", "Cookie", "X-Request-With", "Accept"));
+        config.setAllowedHeaders(List.of("Authorization", "Content-Type", "Cookie", "X-Requested-With", "Accept"));
         config.setExposedHeaders(List.of("Authorization", "Set-Cookie"));
         config.setAllowCredentials(true);
         config.setMaxAge(3600L);
