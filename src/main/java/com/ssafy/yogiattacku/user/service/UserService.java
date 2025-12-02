@@ -22,16 +22,16 @@ public class UserService {
     }
 
     private User syncIfChanged(User user, String email, String nickname, String profileImageUrl) {
-        if(!Objects.equals(user.getEmail(), email)) {
+        if (!Objects.equals(user.getEmail(), email)) {
             user.changeEmail(email);
         }
 
         String verifyNickname = resolveNickname(email, nickname);
-        if(!Objects.equals(verifyNickname, user.getNickname())) {
+        if (!Objects.equals(verifyNickname, user.getNickname())) {
             user.changeNickname(verifyNickname);
         }
 
-        if(!Objects.equals(profileImageUrl, user.getProfileImageUrl())) {
+        if (!Objects.equals(profileImageUrl, user.getProfileImageUrl())) {
             user.changeProfileImageUrl(profileImageUrl);
         }
         return user;
