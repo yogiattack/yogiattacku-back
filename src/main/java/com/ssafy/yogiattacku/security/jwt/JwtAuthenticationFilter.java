@@ -20,7 +20,8 @@ import java.util.List;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final TokenProvider tokenProvider;
     private static final String ROLE = "ROLE_USER";
-    private final CookieUtil cookieUtil;
+    private final String AUTHORIZATION = "Authorization";
+    private final String BEARER = "Bearer ";
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -39,6 +40,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private String resolveToken(HttpServletRequest request) {
-        return cookieUtil.getAccessTokenFromCookie(request);
+        String header = request.getHeader(AUTHORIZATION);
+        if(header != null && header.startsWith(BEARER)) {
+            return header.substring(7);
+        }
+        return null;
     }
 }

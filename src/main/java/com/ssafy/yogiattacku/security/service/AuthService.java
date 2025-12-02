@@ -19,17 +19,15 @@ public class AuthService {
     private final TokenProvider tokenProvider;
     private final RefreshTokenService refreshTokenService;
 
-    @Value("${spring.jwt.access-token-ttl}")
-    private Duration ACCESS_TOKEN_TTL;
     @Value("${spring.jwt.refresh-token-ttl}")
     private Duration REFRESH_TOKEN_TTL;
+    private final String BEARER = "Bearer ";
 
     public void refresh(HttpServletRequest request, HttpServletResponse response) {
         String oldRefreshToken = cookieUtil.getRefreshTokenFromCookie(request);
 
         if (oldRefreshToken == null) {
             cookieUtil.clearRefreshTokenCookie(response);
-            cookieUtil.clearAccessTokenCookie(response);
             throw new GlobalException(ErrorCode.REFRESH_TOKEN_NOT_FOUND);
         }
 
@@ -40,10 +38,9 @@ public class AuthService {
             cookieUtil.addRefreshTokenCookie(response, newRefreshToken, (int) REFRESH_TOKEN_TTL.toSeconds());
 
             String newAccessToken = tokenProvider.generateAccessToken(userId);
-            cookieUtil.addAccessTokenCookie(response, newAccessToken, (int) ACCESS_TOKEN_TTL.toSeconds());
+            response.addHeader("Authorization", BEARER + newAccessToken);
         } catch (GlobalException e) {
             cookieUtil.clearRefreshTokenCookie(response);
-            cookieUtil.clearAccessTokenCookie(response);
             throw e;
         }
     }
@@ -54,23 +51,10 @@ public class AuthService {
         }
 
         String refreshToken = cookieUtil.getRefreshTokenFromCookie(request);
-        if(refreshToken != null) {
+
+        if (refreshToken != null) {
             refreshTokenService.delete(refreshToken);
         }
-
         cookieUtil.clearRefreshTokenCookie(response);
-        cookieUtil.clearAccessTokenCookie(response);
-    }
-
-    private Long getUserIdFromExpiredAccessToken(String accessToken) {
-        if (accessToken == null) {
-            throw new GlobalException(ErrorCode.ACCESS_TOKEN_NOT_FOUND);
-        }
-
-        try {
-            return tokenProvider.getUserIdAllowExpire(accessToken);
-        } catch (Exception e) {
-            throw new GlobalException(ErrorCode.ACCESS_TOKEN_NOT_FOUND);
-        }
     }
 }
