@@ -9,6 +9,7 @@ import com.ssafy.yogiattacku.user.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -24,8 +25,12 @@ public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
     private final CookieUtil cookieUtil;
     private final RefreshTokenService refreshTokenService;
 
-    private static final Duration ACCESS_TOKEN_TTL = Duration.ofMinutes(30);
-    private static final Duration REFRESH_TOKEN_TTL = Duration.ofDays(7);
+    @Value("${spring.jwt.access-token-ttl}")
+    private Duration ACCESS_TOKEN_TTL;
+    @Value("${spring.jwt.refresh-token-ttl}")
+    private Duration REFRESH_TOKEN_TTL;
+    @Value("${direct.home}")
+    private String REDIRECTION_HOME;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
@@ -44,6 +49,6 @@ public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
         cookieUtil.addAccessTokenCookie(response, accessToken, (int) ACCESS_TOKEN_TTL.toSeconds());
         cookieUtil.addRefreshTokenCookie(response, refreshToken, (int) REFRESH_TOKEN_TTL.toSeconds());
 
-        response.sendRedirect("http://localhost:3000/board");
+        response.sendRedirect(REDIRECTION_HOME);
     }
 }
