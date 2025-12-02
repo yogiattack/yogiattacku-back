@@ -24,7 +24,7 @@ public class AuthController {
 
     @PostMapping("/logout")
     public ResponseBody<Void> logout(@AuthenticationPrincipal Long userId, HttpServletRequest request, HttpServletResponse response) {
-        authService.logout(userId, response);
+        authService.logout(userId, request, response);
         return ResponseBody.success(null);
     }
 }
