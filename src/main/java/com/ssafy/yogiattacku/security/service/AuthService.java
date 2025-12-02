@@ -34,10 +34,10 @@ public class AuthService {
 
         try {
             String newRefreshToken = refreshTokenService.rotate(userId, oldRefreshToken);
-            cookieUtil.addRefreshTokenCookie(response, newRefreshToken, (int) ACCESS_TOKEN_TTL.toSeconds());
+            cookieUtil.addRefreshTokenCookie(response, newRefreshToken, (int) REFRESH_TOKEN_TTL.toSeconds());
 
             String newAccessToken = tokenProvider.generateAccessToken(userId);
-            cookieUtil.addAccessTokenCookie(response, newAccessToken, (int) REFRESH_TOKEN_TTL.toSeconds());
+            cookieUtil.addAccessTokenCookie(response, newAccessToken, (int) ACCESS_TOKEN_TTL.toSeconds());
         } catch (GlobalException e) {
             refreshTokenService.delete(userId);
             cookieUtil.clearRefreshTokenCookie(response);
