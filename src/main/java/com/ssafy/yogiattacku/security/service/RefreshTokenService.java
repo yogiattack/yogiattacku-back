@@ -4,6 +4,7 @@ import com.ssafy.yogiattacku.global.exception.ErrorCode;
 import com.ssafy.yogiattacku.global.exception.GlobalException;
 import com.ssafy.yogiattacku.security.util.RefreshTokenUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
@@ -16,7 +17,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class RefreshTokenService {
     private final RefreshTokenUtil refreshTokenUtil;
-    private static final Duration REFRESH_TOKEN_TTL = Duration.ofDays(7);
+    @Value("${spring.jwt.refresh-token-ttl}")
+    private Duration REFRESH_TOKEN_TTL;
     private static final String ALGORITHM_NAME = "SHA-256";
 
     public String issue(Long userId) {
@@ -26,19 +28,30 @@ public class RefreshTokenService {
         return token;
     }
 
-    public String rotate(Long userId, String refreshToken) {
-        String storedRefreshToken = refreshTokenUtil.findHash(userId)
+    public Long getUserIdByRefreshToken(String rawRefreshToken) {
+        String tokenHash = sha256(rawRefreshToken);
+        return refreshTokenUtil.findUserIdByTokenHash(tokenHash)
                 .orElseThrow(() -> new GlobalException(ErrorCode.REFRESH_TOKEN_INVALID));
-
-        String requestRefreshToken = sha256(refreshToken);
-        if (!requestRefreshToken.equals(storedRefreshToken)) {
-            throw new GlobalException(ErrorCode.REFRESH_TOKEN_INVALID);
-        }
-        return issue(userId);
     }
 
-    public void delete(Long userId) {
-        refreshTokenUtil.delete(userId);
+    public String rotate(String oldRawRefreshToken) {
+        String oldHash = sha256(oldRawRefreshToken);
+
+        Long userId = refreshTokenUtil.findUserIdByTokenHash(oldHash)
+                .orElseThrow(() -> new GlobalException(ErrorCode.REFRESH_TOKEN_INVALID));
+
+        refreshTokenUtil.delete(oldHash);
+
+        String newRawToken = UUID.randomUUID().toString();
+        String newHash = sha256(newRawToken);
+        refreshTokenUtil.save(userId, newHash, REFRESH_TOKEN_TTL);
+
+        return newRawToken;
+    }
+
+    public void delete(String rawRefreshToken) {
+        String hash = sha256(rawRefreshToken);
+        refreshTokenUtil.delete(hash);
     }
 
     private String sha256(String value) {
