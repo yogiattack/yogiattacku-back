@@ -12,12 +12,14 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import javax.crypto.SecretKey;
+import java.time.Duration;
 import java.util.Date;
 
 @Component
 @RequiredArgsConstructor
 public class TokenProvider {
-    private static final long ACCESS_TOKEN_EXPIRE_TIME = 30 * 60 * 1000L;
+    @Value("${spring.jwt.access-token-ttl}")
+    private Duration ACCESS_TOKEN_TTL;
     private static final String ROLE = "ROLE_USER";
 
     @Value("${spring.jwt.key}")
@@ -32,7 +34,7 @@ public class TokenProvider {
 
     public String generateAccessToken(Long userId) {
         Date issuedDate = new Date();
-        Date expiryDate = new Date(issuedDate.getTime() + ACCESS_TOKEN_EXPIRE_TIME);
+        Date expiryDate = new Date(issuedDate.getTime() + ACCESS_TOKEN_TTL.toMillis());
 
         return Jwts.builder()
                 .subject(String.valueOf(userId))
