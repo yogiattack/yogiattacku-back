@@ -1,7 +1,6 @@
 package com.ssafy.yogiattacku.security.jwt;
 
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -69,14 +68,5 @@ public class TokenProvider {
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
-    }
-
-    public Long getUserIdAllowExpire(String token) {
-        try {
-            Claims claims = parseToken(token);
-            return Long.parseLong(claims.getSubject());
-        } catch (ExpiredJwtException e) {
-            return Long.parseLong(e.getClaims().getSubject());
-        }
     }
 }

@@ -1,6 +1,5 @@
 package com.ssafy.yogiattacku.security.handler;
 
-import com.ssafy.yogiattacku.security.jwt.TokenProvider;
 import com.ssafy.yogiattacku.security.oauth2.CustomOAuth2User;
 import com.ssafy.yogiattacku.security.service.RefreshTokenService;
 import com.ssafy.yogiattacku.security.util.CookieUtil;
@@ -21,12 +20,9 @@ import java.time.Duration;
 @RequiredArgsConstructor
 public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
     private final UserService userService;
-    private final TokenProvider tokenProvider;
     private final CookieUtil cookieUtil;
     private final RefreshTokenService refreshTokenService;
 
-    @Value("${spring.jwt.access-token-ttl}")
-    private Duration ACCESS_TOKEN_TTL;
     @Value("${spring.jwt.refresh-token-ttl}")
     private Duration REFRESH_TOKEN_TTL;
     @Value("${direct.home}")
@@ -42,13 +38,8 @@ public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
                 customOAuth2User.getNickname(),
                 customOAuth2User.getProfileImageUrl()
         );
-
-        String accessToken = tokenProvider.generateAccessToken(user.getId());
         String refreshToken = refreshTokenService.issue(user.getId());
-
-        cookieUtil.addAccessTokenCookie(response, accessToken, (int) ACCESS_TOKEN_TTL.toSeconds());
         cookieUtil.addRefreshTokenCookie(response, refreshToken, (int) REFRESH_TOKEN_TTL.toSeconds());
-
         response.sendRedirect(REDIRECTION_HOME);
     }
 }

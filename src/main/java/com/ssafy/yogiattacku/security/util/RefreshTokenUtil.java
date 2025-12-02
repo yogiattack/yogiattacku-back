@@ -4,7 +4,6 @@ import com.ssafy.yogiattacku.security.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;
@@ -16,7 +15,6 @@ import java.util.Optional;
 public class RefreshTokenUtil {
     private final StringRedisTemplate redis;
     private static final String REFRESH_TOKEN_PREFIX = "rt:";
-    private final TokenProvider tokenProvider;
 
     private String buildKey(String tokenHash) {
         return REFRESH_TOKEN_PREFIX + tokenHash;
