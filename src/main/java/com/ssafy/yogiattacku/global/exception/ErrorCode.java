@@ -14,6 +14,8 @@ public enum ErrorCode {
     ACCESS_TOKEN_INVALID(UNAUTHORIZED, 1002, "유효하지 않은 Access Token입니다."),
     REFRESH_TOKEN_NOT_FOUND(UNAUTHORIZED, 1003, "Refresh Token이 존재하지 않습니다."),
     REFRESH_TOKEN_INVALID(UNAUTHORIZED, 1004, "유효하지 않은 Refresh Token입니다."),
+    ACCESS_DENIED(FORBIDDEN, 1005, "접근 권한이 없습니다."),
+
     DEMO_ERROR(HttpStatus.BAD_REQUEST, 9999, "데모 에러입니다."),
     ;
     private final HttpStatus status;
