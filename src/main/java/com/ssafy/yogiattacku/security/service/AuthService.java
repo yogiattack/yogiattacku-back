@@ -26,6 +26,7 @@ public class AuthService {
 
         if (oldRefreshToken == null) {
             cookieUtil.clearRefreshTokenCookie(response);
+            cookieUtil.clearAccessTokenCookie(response);
             throw new GlobalException(ErrorCode.REFRESH_TOKEN_NOT_FOUND);
         }
 
@@ -34,13 +35,14 @@ public class AuthService {
 
         try {
             String newRefreshToken = refreshTokenService.rotate(userId, oldRefreshToken);
-            cookieUtil.addRefreshTokenCookie(response, newRefreshToken, (int) REFRESH_TOKEN_TTL.toSeconds());
-
             String newAccessToken = tokenProvider.generateAccessToken(userId);
+
+            cookieUtil.addRefreshTokenCookie(response, newRefreshToken, (int) REFRESH_TOKEN_TTL.toSeconds());
             cookieUtil.addAccessTokenCookie(response, newAccessToken, (int) ACCESS_TOKEN_TTL.toSeconds());
         } catch (GlobalException e) {
             refreshTokenService.delete(userId);
             cookieUtil.clearRefreshTokenCookie(response);
+            cookieUtil.clearAccessTokenCookie(response);
             throw e;
         }
     }
@@ -55,6 +57,10 @@ public class AuthService {
     }
 
     private Long getUserIdFromExpiredAccessToken(String accessToken) {
+        if(accessToken == null) {
+            throw new GlobalException(ErrorCode.ACCESS_TOKEN_NOT_FOUND);
+        }
+
         try {
             return tokenProvider.getUserIdAllowExpire(accessToken);
         } catch (Exception e) {
