@@ -8,28 +8,35 @@ import org.springframework.stereotype.Component;
 @Component
 public class CookieUtil {
     private static final String REFRESH_TOKEN_COOKIE_NAME = "REFRESH_TOKEN";
+    private static final String DOMAIN = "yogiattacku.n-e.kr";
 
     public void addRefreshTokenCookie(HttpServletResponse response, String value, int maxAgeSeconds) {
         Cookie cookie = new Cookie(REFRESH_TOKEN_COOKIE_NAME, value);
         cookie.setHttpOnly(true);
+        cookie.setSecure(true);
         cookie.setPath("/");
+        cookie.setDomain(DOMAIN);
         cookie.setMaxAge(maxAgeSeconds);
+        cookie.setAttribute("SameSite", "None");
         response.addCookie(cookie);
     }
 
     public void clearRefreshTokenCookie(HttpServletResponse response) {
         Cookie cookie = new Cookie(REFRESH_TOKEN_COOKIE_NAME, null);
         cookie.setHttpOnly(true);
+        cookie.setSecure(true);
         cookie.setPath("/");
+        cookie.setDomain(DOMAIN);
         cookie.setMaxAge(0);
+        cookie.setAttribute("SameSite", "None");
         response.addCookie(cookie);
     }
 
     public String getRefreshTokenFromCookie(HttpServletRequest request) {
-        if(request.getCookies() == null) return null;
+        if (request.getCookies() == null) return null;
 
-        for(Cookie cookie : request.getCookies()) {
-            if(REFRESH_TOKEN_COOKIE_NAME.equals(cookie.getName())) {
+        for (Cookie cookie : request.getCookies()) {
+            if (REFRESH_TOKEN_COOKIE_NAME.equals(cookie.getName())) {
                 return cookie.getValue();
             }
         }
