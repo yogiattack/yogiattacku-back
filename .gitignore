@@ -129,3 +129,6 @@ src/test/resources/*.yml
 # Personal notes
 notes.txt
 TODO.md
+
+### postgres-data
+/postgres-data/
