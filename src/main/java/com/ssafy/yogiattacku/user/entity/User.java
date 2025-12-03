@@ -11,7 +11,7 @@ import static lombok.AccessLevel.*;
 
 @Entity
 @Getter
-@Table(name = "user")
+@Table(name = "users")
 @NoArgsConstructor(access = PROTECTED)
 public class User extends TimeBaseEntity {
     @Id
