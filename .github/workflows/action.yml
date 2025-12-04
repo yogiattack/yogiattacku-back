@@ -70,8 +70,8 @@ jobs:
             
             cd ~/yogiattacku-back
             
-            docker compose down || true
-            docker compose up -d
+            sudo docker compose down || true
+            sudo docker compose up -d
             
             rm -rf /home/ubuntu/yogiattacku-back/current
             mkdir /home/ubuntu/yogiattacku-back/current
