@@ -24,10 +24,10 @@ jobs:
           echo "${{ secrets.APPLICATION_YML }}" > ./src/main/resources/application.yml
 
       - name: build.gradle 생성
-        run: echo "${{ secrets.BUILD_GRADLE }}" > build.gradle
+        run: echo "${{ secrets.BUILD_GRADLE }}" | base64 --decode > build.gradle
 
       - name: settings.gradle 생성
-        run: echo "${{ secrets.SETTINGS_GRADLE }}" > settings.gradle
+        run: echo "${{ secrets.SETTINGS_GRADLE }}" | base64 --decode > settings.gradle
 
       - name: keystore.p12 파일 복원
         run: echo "${{ secrets.KEYSTORE_P12_BASE64 }}" | base64 --decode > ./src/main/resources/keystore.p12
