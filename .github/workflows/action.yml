@@ -79,6 +79,8 @@ jobs:
             sudo fuser -k -n tcp 443 || true
             
             cd /home/ubuntu/yogiattacku-back/current
-            sudo nohup java -jar project.jar 2>&1 &
+            sudo nohup java -jar project.jar \
+              > /home/ubuntu/yogiattacku-back/current/app.log \
+              2>&1 < /dev/null &
             sudo rm -rf /home/ubuntu/yogiattacku-back/tobe
 
