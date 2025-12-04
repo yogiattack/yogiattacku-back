@@ -68,7 +68,7 @@ jobs:
           script: |
             set -e
             
-            sudo cd ~/yogiattacku-back
+            cd ~/yogiattacku-back
             
             sudo docker compose down || true
             sudo docker compose up -d
@@ -78,7 +78,7 @@ jobs:
             sudo mv /home/ubuntu/yogiattacku-back/tobe/project.jar /home/ubuntu/yogiattacku-back/current
             sudo fuser -k -n tcp 443 || true
             
-            sudo cd /home/ubuntu/yogiattacku-back/current
+            cd /home/ubuntu/yogiattacku-back/current
             sudo nohup java -jar project.jar 2>&1 &
             sudo rm -rf /home/ubuntu/yogiattacku-back/tobe
 
