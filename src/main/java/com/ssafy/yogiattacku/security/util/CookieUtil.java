@@ -42,10 +42,10 @@ public class CookieUtil {
         ResponseCookie cookie = ResponseCookie.from(cookieName, value)
                 .path("/")
                 .httpOnly(true)
-                .secure(true)
+//                .secure(true)
                 .domain(DOMAIN)
                 .maxAge(maxAgeSeconds)
-                .sameSite("None")
+//                .sameSite("None")
                 .build();
 
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
@@ -55,10 +55,10 @@ public class CookieUtil {
         ResponseCookie cookie = ResponseCookie.from(cookieName, "")
                 .path("/")
                 .httpOnly(true)
-                .secure(true)
+//                .secure(true)
                 .domain(DOMAIN)
                 .maxAge(0)
-                .sameSite("None")
+//                .sameSite("None")
                 .build();
 
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
