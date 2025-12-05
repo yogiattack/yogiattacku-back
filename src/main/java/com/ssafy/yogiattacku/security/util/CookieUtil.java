@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 public class CookieUtil {
     private static final String ACCESS_TOKEN_COOKIE_NAME = "ACCESS_TOKEN";
     private static final String REFRESH_TOKEN_COOKIE_NAME = "REFRESH_TOKEN";
-    private static final String DOMAIN = "yogiattacku.n-e.kr";
+    private static final String DOMAIN = "localhost";
 
     public void addAccessTokenCookie(HttpServletResponse response, String value, int maxAgeSeconds) {
         addTokenCookie(ACCESS_TOKEN_COOKIE_NAME, value, maxAgeSeconds, response);
