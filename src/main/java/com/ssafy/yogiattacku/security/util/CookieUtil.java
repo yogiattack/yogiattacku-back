@@ -39,22 +39,22 @@ public class CookieUtil {
     private void addTokenCookie(String cookieName, String value, int maxAgeSeconds, HttpServletResponse response) {
         Cookie cookie = new Cookie(cookieName, value);
         cookie.setHttpOnly(true);
-        cookie.setSecure(true);
+//        cookie.setSecure(true);
         cookie.setPath("/");
 //        cookie.setDomain(DOMAIN);
         cookie.setMaxAge(maxAgeSeconds);
-        cookie.setAttribute("SameSite", "None");
+//        cookie.setAttribute("SameSite", "None");
         response.addCookie(cookie);
     }
 
     private void clearTokenFromCookie(String cookieName, HttpServletResponse response) {
         Cookie cookie = new Cookie(cookieName, null);
         cookie.setHttpOnly(true);
-        cookie.setSecure(true);
+//        cookie.setSecure(true);
         cookie.setPath("/");
 //        cookie.setDomain(DOMAIN);
         cookie.setMaxAge(0);
-        cookie.setAttribute("SameSite", "None");
+//        cookie.setAttribute("SameSite", "None");
         response.addCookie(cookie);
     }
 
