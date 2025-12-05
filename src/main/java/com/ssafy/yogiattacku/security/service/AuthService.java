@@ -21,12 +21,14 @@ public class AuthService {
 
     @Value("${spring.jwt.refresh-token-ttl}")
     private Duration REFRESH_TOKEN_TTL;
-    private final String BEARER = "Bearer ";
+    @Value("${spring.jwt.access-token-ttl}")
+    private Duration ACCESS_TOKEN_TTL;
 
     public void refresh(HttpServletRequest request, HttpServletResponse response) {
         String oldRefreshToken = cookieUtil.getRefreshTokenFromCookie(request);
 
         if (oldRefreshToken == null) {
+            cookieUtil.clearAccessTokenCookie(response);
             cookieUtil.clearRefreshTokenCookie(response);
             throw new GlobalException(ErrorCode.REFRESH_TOKEN_NOT_FOUND);
         }
@@ -38,7 +40,7 @@ public class AuthService {
             cookieUtil.addRefreshTokenCookie(response, newRefreshToken, (int) REFRESH_TOKEN_TTL.toSeconds());
 
             String newAccessToken = tokenProvider.generateAccessToken(userId);
-            response.addHeader("Authorization", BEARER + newAccessToken);
+            cookieUtil.addAccessTokenCookie(response, newAccessToken, (int) ACCESS_TOKEN_TTL.toSeconds());
         } catch (GlobalException e) {
             cookieUtil.clearRefreshTokenCookie(response);
             throw e;
@@ -56,5 +58,6 @@ public class AuthService {
             refreshTokenService.delete(refreshToken);
         }
         cookieUtil.clearRefreshTokenCookie(response);
+        cookieUtil.clearAccessTokenCookie(response);
     }
 }
