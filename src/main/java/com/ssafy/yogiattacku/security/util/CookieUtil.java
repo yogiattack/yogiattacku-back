@@ -3,6 +3,8 @@ package com.ssafy.yogiattacku.security.util;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -37,25 +39,29 @@ public class CookieUtil {
     }
 
     private void addTokenCookie(String cookieName, String value, int maxAgeSeconds, HttpServletResponse response) {
-        Cookie cookie = new Cookie(cookieName, value);
-        cookie.setHttpOnly(true);
-//        cookie.setSecure(true);
-        cookie.setPath("/");
-//        cookie.setDomain(DOMAIN);
-        cookie.setMaxAge(maxAgeSeconds);
-//        cookie.setAttribute("SameSite", "None");
-        response.addCookie(cookie);
+        ResponseCookie cookie = ResponseCookie.from(cookieName, value)
+                .path("/")
+                .httpOnly(true)
+                .secure(true)
+                .domain(DOMAIN)
+                .maxAge(maxAgeSeconds)
+                .sameSite("None")
+                .build();
+
+        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
     }
 
     private void clearTokenFromCookie(String cookieName, HttpServletResponse response) {
-        Cookie cookie = new Cookie(cookieName, null);
-        cookie.setHttpOnly(true);
-//        cookie.setSecure(true);
-        cookie.setPath("/");
-//        cookie.setDomain(DOMAIN);
-        cookie.setMaxAge(0);
-//        cookie.setAttribute("SameSite", "None");
-        response.addCookie(cookie);
+        ResponseCookie cookie = ResponseCookie.from(cookieName, "")
+                .path("/")
+                .httpOnly(true)
+                .secure(true)
+                .domain(DOMAIN)
+                .maxAge(0)
+                .sameSite("None")
+                .build();
+
+        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
     }
 
 
