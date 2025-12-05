@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 public class CookieUtil {
     private static final String ACCESS_TOKEN_COOKIE_NAME = "ACCESS_TOKEN";
     private static final String REFRESH_TOKEN_COOKIE_NAME = "REFRESH_TOKEN";
-    private static final String DOMAIN = "localhost";
+    private static final String DOMAIN = "yogiattacku.n-e.kr";
 
     public void addAccessTokenCookie(HttpServletResponse response, String value, int maxAgeSeconds) {
         addTokenCookie(ACCESS_TOKEN_COOKIE_NAME, value, maxAgeSeconds, response);
@@ -42,10 +42,10 @@ public class CookieUtil {
         ResponseCookie cookie = ResponseCookie.from(cookieName, value)
                 .path("/")
                 .httpOnly(true)
-//                .secure(true)
+                .secure(true)
                 .domain(DOMAIN)
                 .maxAge(maxAgeSeconds)
-//                .sameSite("None")
+                .sameSite("None")
                 .build();
 
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
@@ -55,10 +55,10 @@ public class CookieUtil {
         ResponseCookie cookie = ResponseCookie.from(cookieName, "")
                 .path("/")
                 .httpOnly(true)
-//                .secure(true)
+                .secure(true)
                 .domain(DOMAIN)
                 .maxAge(0)
-//                .sameSite("None")
+                .sameSite("None")
                 .build();
 
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
