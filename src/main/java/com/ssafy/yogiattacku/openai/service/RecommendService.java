@@ -50,15 +50,15 @@ public class RecommendService {
                     attractionDescriptionJdbcRepository.findSimilarAttractions(queryVector, LIMIT);
 
             List<Spot> spotResponses = candidates.stream()
-                    .map(c -> new Spot(
-                            c.id(),
-                            c.attractionName(),
-                            c.sidoName(),
-                            c.gugunName(),
-                            c.latitude(),
-                            c.longitude()
-                    ))
-                    .toList();
+                    .map(c -> Spot.builder()
+                            .id(c.id())
+                            .name(c.attractionName())
+                            .sidoName(c.sidoName())
+                            .gugunName(c.gugunName())
+                            .latitude(c.latitude())
+                            .longitude(c.longitude())
+                            .build()
+                    ).toList();
 
             RecommendStreamEvent spotsPayload = RecommendStreamEvent.builder()
                     .type(SPOTS)

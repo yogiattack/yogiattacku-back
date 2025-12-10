@@ -25,6 +25,6 @@ public class RecommendController {
             produces = TEXT_EVENT_STREAM_VALUE
     )
     public Flux<ServerSentEvent<RecommendStreamEvent>> streamRecommend(@RequestBody ChatRequest request) {
-        return recommendService.recommendStream(request);
+        return Flux.defer(() -> recommendService.recommendStream(request));
     }
 }

@@ -29,6 +29,8 @@ public class EmbeddingSentence {
     @Value("${spring.ai.vectorstore.pgvector.dimensions}")
     private Integer dimensions;
 
+    private final HttpClient httpClient = HttpClient.newHttpClient();
+
     private final ObjectMapper mapper;
 
     public List<float[]> requestEmbeddingFromOpenAI(List<String> input) {
@@ -51,9 +53,16 @@ public class EmbeddingSentence {
                     .POST(HttpRequest.BodyPublishers.ofString(json))
                     .build();
 
-            HttpClient client = HttpClient.newHttpClient();
             HttpResponse<String> response
-                    = client.send(request, HttpResponse.BodyHandlers.ofString());
+                    = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+            if (response.statusCode() != 200) {
+                throw new GlobalException(ErrorCode.EMBEDDING_REQUEST_FAILED);
+            }
+
+            if (response.body() == null || response.body().isBlank()) {
+                throw new GlobalException(ErrorCode.EMBEDDING_REQUEST_FAILED);
+            }
 
             List<float[]> result = new ArrayList<>();
             for (JsonNode jsonNode : mapper.readTree(response.body()).get("data")) {
@@ -65,7 +74,10 @@ public class EmbeddingSentence {
                 result.add(embedding);
             }
             return result;
-        } catch (IOException | InterruptedException e) {
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new GlobalException(ErrorCode.EMBEDDING_REQUEST_FAILED);
+        } catch (IOException e) {
             throw new GlobalException(ErrorCode.EMBEDDING_REQUEST_FAILED);
         }
     }
