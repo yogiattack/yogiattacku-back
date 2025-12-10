@@ -16,6 +16,10 @@ public enum ErrorCode {
     REFRESH_TOKEN_INVALID(UNAUTHORIZED, 1004, "유효하지 않은 Refresh Token입니다."),
     ACCESS_DENIED(FORBIDDEN, 1005, "접근 권한이 없습니다."),
 
+    ATTRACTION_VECTOR_SEARCH_ERROR(NOT_FOUND, 2000, "유사 관광지 조회 중 오류가 발생했습니다."),
+    EMBEDDING_REQUEST_FAILED(INTERNAL_SERVER_ERROR, 2001, "OpenAI 임베딩 요청 중 오류가 발생했습니다."),
+    RECOMMENDATION_GENERATION_FAILED(INTERNAL_SERVER_ERROR, 2002, "여행 추천 생성 중 오류가 발생했습니다."),
+
     DEMO_ERROR(HttpStatus.BAD_REQUEST, 9999, "데모 에러입니다."),
     ;
     private final HttpStatus status;
