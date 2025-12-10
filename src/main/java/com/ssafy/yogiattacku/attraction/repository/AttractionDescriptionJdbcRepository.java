@@ -28,11 +28,11 @@ public class AttractionDescriptionJdbcRepository {
                 "SELECT id, " +
                         "       sido_name, " +
                         "       gugun_name, " +
-                        "       content_type_name, " +   // 오타 수정
+                        "       content_type_name, " +
                         "       attraction_name, " +
                         "       address, " +
                         "       latitude, " +
-                        "       longitude, " +           // 여기 콤마 추가
+                        "       longitude, " +
                         "       embedding <-> ? AS distance " +
                         "FROM " + tableName + " " +
                         "WHERE embedding IS NOT NULL " +
@@ -46,7 +46,7 @@ public class AttractionDescriptionJdbcRepository {
                 PreparedStatement stmt = conn.prepareStatement(sql)
         ) {
             PGvector.registerTypes(conn);
-            stmt.setObject(1, new PGvector(queryVector)); // 쿼리 벡터
+            stmt.setObject(1, new PGvector(queryVector));
             stmt.setInt(2, limit);
 
             try (ResultSet rs = stmt.executeQuery()) {
