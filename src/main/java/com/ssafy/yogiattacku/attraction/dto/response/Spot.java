@@ -1,5 +1,8 @@
 package com.ssafy.yogiattacku.attraction.dto.response;
 
+import lombok.Builder;
+
+@Builder
 public record Spot(
         Long id,
         String name,
