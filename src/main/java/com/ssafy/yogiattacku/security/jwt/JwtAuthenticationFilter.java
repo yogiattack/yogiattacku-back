@@ -18,7 +18,6 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-@Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final TokenProvider tokenProvider;
     private static final String ROLE = "ROLE_USER";
@@ -27,7 +26,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String accessToken = resolveToken(request);
-        log.debug("JWT token: {}", accessToken);
 
         if (accessToken != null && tokenProvider.validateToken(accessToken)) {
             Long userId = tokenProvider.getUserIdFromToken(accessToken);
