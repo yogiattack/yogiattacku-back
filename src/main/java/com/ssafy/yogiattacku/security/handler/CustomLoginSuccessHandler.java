@@ -9,6 +9,7 @@ import com.ssafy.yogiattacku.user.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.time.Duration;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
@@ -36,6 +38,7 @@ public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
+        log.info("CustomLoginSuccessHandler onAuthenticationSuccess");
         CustomOAuth2User customOAuth2User = (CustomOAuth2User) authentication.getPrincipal();
 
         User user = userService.upsertFromKakao(
@@ -44,8 +47,13 @@ public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
                 customOAuth2User.getNickname(),
                 customOAuth2User.getProfileImageUrl()
         );
+
+        log.info("user email: {}", user.getEmail());
         String refreshToken = refreshTokenService.issue(user.getId());
         String accessToken = tokenProvider.generateAccessToken(user.getId());
+
+        log.info("access token: {}", accessToken);
+        log.info("refresh token: {}", refreshToken);
 
         cookieUtil.addAccessTokenCookie(response, accessToken, (int) ACCESS_TOKEN_TTL.toSeconds());
         cookieUtil.addRefreshTokenCookie(response, refreshToken, (int) REFRESH_TOKEN_TTL.toSeconds());
