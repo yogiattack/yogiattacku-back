@@ -20,6 +20,10 @@ public enum ErrorCode {
     EMBEDDING_REQUEST_FAILED(INTERNAL_SERVER_ERROR, 2001, "OpenAI 임베딩 요청 중 오류가 발생했습니다."),
     RECOMMENDATION_GENERATION_FAILED(INTERNAL_SERVER_ERROR, 2002, "여행 추천 생성 중 오류가 발생했습니다."),
 
+    S3_OBJECT_NOT_FOUND(NOT_FOUND, 3000, "S3 객체를 찾을 수 없습니다."),
+    S3_DELETE_FAILED(INTERNAL_SERVER_ERROR, 3002, "S3 삭제 중 오류가 발생했습니다."),
+    FILE_SIZE_EXCEEDED(BAD_REQUEST, 3004, "업로드 가능한 파일 크기를 초과했습니다."),
+
     DEMO_ERROR(HttpStatus.BAD_REQUEST, 9999, "데모 에러입니다."),
     ;
     private final HttpStatus status;
