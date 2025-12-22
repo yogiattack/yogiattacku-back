@@ -50,7 +50,7 @@ public class CookieUtil {
                 .sameSite("None")
                 .build();
         log.info("Add cookie to response: {}", cookie);
-        response.setHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
     }
 
     private void clearTokenFromCookie(String cookieName, HttpServletResponse response) {
@@ -63,7 +63,7 @@ public class CookieUtil {
                 .sameSite("None")
                 .build();
 
-        response.setHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
     }
 
 
