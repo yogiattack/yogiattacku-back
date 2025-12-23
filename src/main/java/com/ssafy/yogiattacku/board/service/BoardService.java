@@ -142,7 +142,7 @@ public class BoardService {
                 .toList();
 
         if (uniqueS3Keys.isEmpty()) {
-            throw new GlobalException(ErrorCode.EMPTY_S3_KEYS);
+            return List.of();
         }
 
         String prefix = "images/" + bucketRootKey + "/";
