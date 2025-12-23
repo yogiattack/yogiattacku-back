@@ -13,6 +13,6 @@ public record BoardCreateRequest(
         @NotBlank @Size(max = 255) String title,
         @NotBlank String content,
         @NotEmpty List<Long> categoryIds,
-        @NotEmpty List<String> s3Keys
+        List<String> s3Keys
 ) {
 }
