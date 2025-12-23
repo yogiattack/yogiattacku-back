@@ -1,5 +1,8 @@
 package com.ssafy.yogiattacku.user.service;
 
+import com.ssafy.yogiattacku.global.exception.ErrorCode;
+import com.ssafy.yogiattacku.global.exception.GlobalException;
+import com.ssafy.yogiattacku.user.dto.response.UserResponse;
 import com.ssafy.yogiattacku.user.entity.User;
 import com.ssafy.yogiattacku.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +22,14 @@ public class UserService {
         return userRepository.findBySocialId(socialId)
                 .map(existing -> syncIfChanged(existing, email, nickname, profileImageUrl))
                 .orElseGet(() -> register(socialId, email, nickname, profileImageUrl));
+    }
+
+    public UserResponse getUserInfo(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new GlobalException(ErrorCode.USER_NOT_FOUND));
+        return UserResponse.builder()
+                .email(user.getEmail())
+                .nickname(user.getNickname())
+                .build();
     }
 
     private User syncIfChanged(User user, String email, String nickname, String profileImageUrl) {
