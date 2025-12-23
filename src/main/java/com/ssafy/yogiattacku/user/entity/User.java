@@ -16,6 +16,7 @@ import static lombok.AccessLevel.*;
 public class User extends TimeBaseEntity {
     @Id
     @GeneratedValue(strategy = IDENTITY)
+    @Column(name = "user_id")
     private Long id;
 
     @Column(name = "email", nullable = false, unique = true)
