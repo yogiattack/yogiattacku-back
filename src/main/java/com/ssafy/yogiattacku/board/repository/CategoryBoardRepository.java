@@ -18,5 +18,14 @@ public interface CategoryBoardRepository extends JpaRepository<CategoryBoard, Lo
             """)
     List<CategoryBoard> findAllByBoardIdWithCategory(@Param("boardId") Long boardId);
 
+    @Query("""
+                select cb
+                from CategoryBoard cb
+                join fetch cb.category c
+                where cb.board.id in :boardIds
+                order by cb.board.id asc, cb.id asc
+            """)
+    List<CategoryBoard> findAllByBoardIdsWithCategory(@Param("boardIds") List<Long> boardIds);
+
     void deleteAllByBoardId(Long boardId);
 }

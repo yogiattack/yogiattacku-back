@@ -1,11 +1,13 @@
 package com.ssafy.yogiattacku.board.service;
 
+import com.ssafy.yogiattacku.attraction.dto.response.CategoryResponse;
 import com.ssafy.yogiattacku.board.dto.response.page.BoardListItemResponse;
 import com.ssafy.yogiattacku.board.dto.response.page.BoardPageResponse;
 import com.ssafy.yogiattacku.board.dto.response.page.PageMeta;
 import com.ssafy.yogiattacku.board.entity.Board;
 import com.ssafy.yogiattacku.board.entity.Picture;
 import com.ssafy.yogiattacku.board.repository.BoardRepository;
+import com.ssafy.yogiattacku.board.repository.CategoryBoardRepository;
 import com.ssafy.yogiattacku.board.repository.PictureRepository;
 import com.ssafy.yogiattacku.global.exception.ErrorCode;
 import com.ssafy.yogiattacku.global.exception.GlobalException;
@@ -29,6 +31,7 @@ public class BoardQueryService {
     private final BoardRepository boardRepository;
     private final PictureRepository pictureRepository;
     private final UserRepository userRepository;
+    private final CategoryBoardRepository categoryBoardRepository;
 
     @Transactional(readOnly = true)
     public BoardPageResponse readAll(long page, long pageSize, List<Long> categoryIds) {
@@ -109,6 +112,22 @@ public class BoardQueryService {
                         (a, b) -> a
                 ));
 
+        List<Long> boardIds = boards.stream().map(Board::getId).toList();
+
+        Map<Long, List<CategoryResponse>> categoriesMap =
+                categoryBoardRepository.findAllByBoardIdsWithCategory(boardIds).stream()
+                        .collect(Collectors.groupingBy(
+                                cb -> cb.getBoard().getId(),
+                                Collectors.mapping(
+                                        cb -> CategoryResponse.builder()
+                                                .categoryId(cb.getCategory().getId())
+                                                .name(cb.getCategory().getName())
+                                                .build(),
+                                        Collectors.toList()
+                                )
+                        ));
+
+
         return boards.stream()
                 .map(b -> {
                     User user = userMap.get(b.getUserId());
@@ -119,6 +138,9 @@ public class BoardQueryService {
                                     ? defaultThumbnailS3Key
                                     : thumb.getS3Key();
 
+                    List<CategoryResponse> categories =
+                            categoriesMap.getOrDefault(b.getId(), List.of());
+
                     return BoardListItemResponse.builder()
                             .boardId(b.getId())
                             .userId(b.getUserId())
@@ -128,6 +150,7 @@ public class BoardQueryService {
                             .bucketRootKey(b.getBucketRootKey())
                             .thumbnailS3Key(thumbnailKey)
                             .createdAt(b.getCreatedAt())
+                            .categories(categories)
                             .build();
                 })
                 .toList();
