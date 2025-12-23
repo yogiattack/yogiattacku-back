@@ -25,11 +25,11 @@ public class UserService {
     }
 
     public UserResponse getUserInfo(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new GlobalException(ErrorCode.USER_NOT_FOUND));
-        return UserResponse.builder()
-                .email(user.getEmail())
-                .nickname(user.getNickname())
-                .build();
+        return userRepository.findById(userId)
+                .map(user -> UserResponse.builder()
+                        .email(user.getEmail())
+                        .nickname(user.getNickname())
+                        .build()).orElseThrow(() -> new GlobalException(ErrorCode.USER_NOT_FOUND));
     }
 
     private User syncIfChanged(User user, String email, String nickname, String profileImageUrl) {
