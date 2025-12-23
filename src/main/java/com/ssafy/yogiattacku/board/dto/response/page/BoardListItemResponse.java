@@ -1,8 +1,10 @@
 package com.ssafy.yogiattacku.board.dto.response.page;
 
+import com.ssafy.yogiattacku.attraction.dto.response.CategoryResponse;
 import lombok.Builder;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Builder
@@ -14,6 +16,7 @@ public record BoardListItemResponse(
         long viewCount,
         UUID bucketRootKey,
         String thumbnailS3Key,
+        List<CategoryResponse> categories,
         LocalDateTime createdAt
 ) {
 }
