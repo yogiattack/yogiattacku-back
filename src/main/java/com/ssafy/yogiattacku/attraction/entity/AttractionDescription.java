@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class AttractionDescription {
     @Id
-    @Column(name = "id")
+    @Column(name = "attraction_id")
     private Long id;
 
     @Column(name = "sido_name", nullable = false)
