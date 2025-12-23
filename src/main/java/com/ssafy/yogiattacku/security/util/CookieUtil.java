@@ -4,6 +4,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Component;
@@ -13,7 +14,8 @@ import org.springframework.stereotype.Component;
 public class CookieUtil {
     private static final String ACCESS_TOKEN_COOKIE_NAME = "ACCESS_TOKEN";
     private static final String REFRESH_TOKEN_COOKIE_NAME = "REFRESH_TOKEN";
-    private static final String DOMAIN = "yogiattacku.n-e.kr";
+    @Value("${homepage.domain}")
+    private String DOMAIN;
 
     public void addAccessTokenCookie(HttpServletResponse response, String value, int maxAgeSeconds) {
         addTokenCookie(ACCESS_TOKEN_COOKIE_NAME, value, maxAgeSeconds, response);
@@ -49,7 +51,6 @@ public class CookieUtil {
                 .maxAge(maxAgeSeconds)
                 .sameSite("None")
                 .build();
-        log.info("Add cookie to response: {}", cookie);
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
     }
 
@@ -75,6 +76,6 @@ public class CookieUtil {
                 return cookie.getValue();
             }
         }
-            return null;
+        return null;
     }
 }
