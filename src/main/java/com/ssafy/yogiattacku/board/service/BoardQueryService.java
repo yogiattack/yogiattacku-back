@@ -58,10 +58,10 @@ public class BoardQueryService {
     }
 
     @Transactional(readOnly = true)
-    public List<BoardListItemResponse> readPopular(Long userId) {
+    public List<BoardListItemResponse> readPopular(Long viewUserId) {
         int limit = 9;
         List<Board> boards = boardRepository.findPopular(limit);
-        return mapToListItems(userId, boards);
+        return mapToListItems(viewUserId, boards);
     }
 
     private BoardPageResponse toPageResponse(Long viewUserId, List<Board> fetched, long page, long pageSize) {
