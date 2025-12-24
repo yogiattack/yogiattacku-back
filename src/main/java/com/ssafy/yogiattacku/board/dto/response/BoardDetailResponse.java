@@ -15,6 +15,7 @@ public record BoardDetailResponse(
         String title,
         String content,
         long viewCount,
+        boolean isAuthor,
         UUID bucketRootKey,
         LocalDateTime createdAt,
         LocalDateTime updatedAt,

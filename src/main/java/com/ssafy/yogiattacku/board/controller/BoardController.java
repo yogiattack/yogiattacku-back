@@ -57,11 +57,12 @@ public class BoardController {
 
     @GetMapping
     public ResponseBody<BoardPageResponse> readAll(
+            @AuthenticationPrincipal Long userId,
             @RequestParam(name = "page") long page,
             @RequestParam(name = "pageSize") long pageSize,
             @RequestParam(required = false) List<Long> categoryIds
     ) {
-        return ResponseBody.success(boardQueryService.readAll(page, pageSize, categoryIds));
+        return ResponseBody.success(boardQueryService.readAll(userId, page, pageSize, categoryIds));
     }
 
     @GetMapping("/mypage")
@@ -74,7 +75,7 @@ public class BoardController {
     }
 
     @GetMapping("/popular")
-    public ResponseBody<List<BoardListItemResponse>> readPopular() {
-        return ResponseBody.success(boardQueryService.readPopular());
+    public ResponseBody<List<BoardListItemResponse>> readPopular(@AuthenticationPrincipal Long userId) {
+        return ResponseBody.success(boardQueryService.readPopular(userId));
     }
 }
