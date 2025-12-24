@@ -34,7 +34,7 @@ public class BoardQueryService {
     private final CategoryBoardRepository categoryBoardRepository;
 
     @Transactional(readOnly = true)
-    public BoardPageResponse readAll(long page, long pageSize, List<Long> categoryIds) {
+    public BoardPageResponse readAll(Long viewUserID, long page, long pageSize, List<Long> categoryIds) {
         validatePage(page, pageSize);
 
         long offset = (page - 1) * pageSize;
@@ -43,34 +43,34 @@ public class BoardQueryService {
         List<Board> fetched = (categoryIds == null || categoryIds.isEmpty())
                 ? boardRepository.findPage(offset, limit)
                 : boardRepository.findPageByCategoryIds(categoryIds, offset, limit);
-        return toPageResponse(fetched, page, pageSize);
+        return toPageResponse(viewUserID, fetched, page, pageSize);
     }
 
     @Transactional(readOnly = true)
-    public BoardPageResponse readMyPage(Long userId, long page, long pageSize) {
+    public BoardPageResponse readMyPage(Long viewUserId, long page, long pageSize) {
         validatePage(page, pageSize);
 
         long offset = (page - 1) * pageSize;
         int limit = Math.toIntExact(pageSize + 1);
 
-        List<Board> fetched = boardRepository.findMyPage(userId, offset, limit);
-        return toPageResponse(fetched, page, pageSize);
+        List<Board> fetched = boardRepository.findMyPage(viewUserId, offset, limit);
+        return toPageResponse(viewUserId, fetched, page, pageSize);
     }
 
     @Transactional(readOnly = true)
-    public List<BoardListItemResponse> readPopular() {
+    public List<BoardListItemResponse> readPopular(Long viewUserId) {
         int limit = 9;
         List<Board> boards = boardRepository.findPopular(limit);
-        return mapToListItems(boards);
+        return mapToListItems(viewUserId, boards);
     }
 
-    private BoardPageResponse toPageResponse(List<Board> fetched, long page, long pageSize) {
+    private BoardPageResponse toPageResponse(Long viewUserId, List<Board> fetched, long page, long pageSize) {
         boolean hasNext = fetched.size() > pageSize;
         List<Board> boards = hasNext
                 ? fetched.subList(0, Math.toIntExact(pageSize))
                 : fetched;
 
-        List<BoardListItemResponse> items = mapToListItems(boards);
+        List<BoardListItemResponse> items = mapToListItems(viewUserId, boards);
 
         PageMeta pageMeta = PageMeta.builder()
                 .page(page)
@@ -84,7 +84,7 @@ public class BoardQueryService {
                 .build();
     }
 
-    private List<BoardListItemResponse> mapToListItems(List<Board> boards) {
+    private List<BoardListItemResponse> mapToListItems(Long viewUserId, List<Board> boards) {
         if (boards.isEmpty()) {
             return List.of();
         }
@@ -137,7 +137,7 @@ public class BoardQueryService {
                             (thumb == null || thumb.getS3Key() == null || thumb.getS3Key().isBlank())
                                     ? defaultThumbnailS3Key
                                     : thumb.getS3Key();
-
+                    boolean isAuthor = b.getUserId().equals(viewUserId);
                     List<CategoryResponse> categories =
                             categoriesMap.getOrDefault(b.getId(), List.of());
 
@@ -149,6 +149,7 @@ public class BoardQueryService {
                             .viewCount(b.getViewCount())
                             .bucketRootKey(b.getBucketRootKey())
                             .thumbnailS3Key(thumbnailKey)
+                            .isAuthor(isAuthor)
                             .createdAt(b.getCreatedAt())
                             .categories(categories)
                             .build();

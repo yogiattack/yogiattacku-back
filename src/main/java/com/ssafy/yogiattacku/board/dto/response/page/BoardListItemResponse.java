@@ -16,6 +16,7 @@ public record BoardListItemResponse(
         long viewCount,
         UUID bucketRootKey,
         String thumbnailS3Key,
+        boolean isAuthor,
         List<CategoryResponse> categories,
         LocalDateTime createdAt
 ) {

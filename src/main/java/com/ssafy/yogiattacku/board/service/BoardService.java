@@ -76,7 +76,7 @@ public class BoardService {
                 .orElseThrow(() -> new GlobalException(ErrorCode.BOARD_NOT_FOUND));
 
         boolean locked = boardViewDistributedLockRepository.lock(boardId, viewerUserId, TTL);
-
+        boolean isAuthor = board.getUserId().equals(viewerUserId);
         boardViewCountRepository.setIfAbsent(boardId, board.getViewCount());
 
         Long viewCount = locked
@@ -108,6 +108,7 @@ public class BoardService {
                                 .contentType(p.getContentType())
                                 .build()
                         ).toList();
+
         return BoardDetailResponse.builder()
                 .boardId(board.getId())
                 .userId(board.getUserId())
@@ -116,6 +117,7 @@ public class BoardService {
                 .content(board.getContent())
                 .viewCount(viewCount == null ? board.getViewCount() : viewCount)
                 .bucketRootKey(board.getBucketRootKey())
+                .isAuthor(isAuthor)
                 .createdAt(board.getCreatedAt())
                 .updatedAt(board.getUpdatedAt())
                 .categories(categories)
