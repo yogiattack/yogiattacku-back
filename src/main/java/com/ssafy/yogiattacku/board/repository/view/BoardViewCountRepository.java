@@ -13,7 +13,7 @@ public class BoardViewCountRepository {
 
     public Long read(Long boardId) {
         String result = redisTemplate.opsForValue().get(key(boardId));
-        return result == null ? 0L : Long.parseLong(result);
+        return result == null ? null : Long.parseLong(result);
     }
 
     public boolean setIfAbsent(Long boardId, long seed) {
