@@ -63,7 +63,7 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
 
-        config.setAllowedOrigins(List.of("http://localhost:3000", "https://yogiattacku.n-e.kr", "https://local.yogiattacku.n-e.kr:3000", "https://yogiattacku.vercel.app"));
+        config.setAllowedOrigins(List.of("http://localhost:3000", "https://www.yogiattacku.shop", "https://api.yogiattacku.shop"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         config.setAllowedHeaders(List.of("Authorization", "Content-Type", "Cookie", "X-Requested-With", "Accept"));
         config.setExposedHeaders(List.of("Authorization", "Set-Cookie"));
