@@ -145,6 +145,7 @@ public class BoardQueryService {
                             .boardId(b.getId())
                             .userId(b.getUserId())
                             .nickname(user != null ? user.getNickname() : null)
+                            .profileImageUrl(user.getProfileImageUrl())
                             .title(b.getTitle())
                             .viewCount(b.getViewCount())
                             .bucketRootKey(b.getBucketRootKey())

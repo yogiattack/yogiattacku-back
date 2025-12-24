@@ -113,6 +113,7 @@ public class BoardService {
                 .boardId(board.getId())
                 .userId(board.getUserId())
                 .nickname(user.getNickname())
+                .profileImageUrl(user.getProfileImageUrl())
                 .title(board.getTitle())
                 .content(board.getContent())
                 .viewCount(viewCount == null ? board.getViewCount() : viewCount)
