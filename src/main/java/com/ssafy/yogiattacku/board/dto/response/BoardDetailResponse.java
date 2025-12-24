@@ -12,6 +12,7 @@ public record BoardDetailResponse(
         Long boardId,
         Long userId,
         String nickname,
+        String profileImageUrl,
         String title,
         String content,
         long viewCount,

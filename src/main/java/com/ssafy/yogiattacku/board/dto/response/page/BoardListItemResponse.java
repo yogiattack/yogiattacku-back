@@ -12,6 +12,7 @@ public record BoardListItemResponse(
         Long boardId,
         Long userId,
         String nickname,
+        String profileImageUrl,
         String title,
         long viewCount,
         UUID bucketRootKey,

@@ -29,6 +29,7 @@ public class UserService {
                 .map(user -> UserResponse.builder()
                         .email(user.getEmail())
                         .nickname(user.getNickname())
+                        .profileImageUrl(user.getProfileImageUrl())
                         .build()).orElseThrow(() -> new GlobalException(ErrorCode.USER_NOT_FOUND));
     }
 
