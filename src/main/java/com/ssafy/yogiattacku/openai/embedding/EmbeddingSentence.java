@@ -24,7 +24,7 @@ public class EmbeddingSentence {
     private String apiKey;
     @Value("${spring.ai.openai.embedding.options.model}")
     private String embeddingModel;
-    @Value("https://gms.ssafy.io/gmsapi/api.openai.com/v1/embeddings")
+    @Value("https://api.openai.com/v1/embeddings")
     private String apiUrl;
     @Value("${spring.ai.vectorstore.pgvector.dimensions}")
     private Integer dimensions;
